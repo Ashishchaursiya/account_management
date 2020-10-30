@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+  
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+   
+  </head>
+  <body>
+    {% block body %} 
+     
+   
+ <!--navbar-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light container">
+      <a class="navbar-brand" href="#"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">HOME </a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'add' %}">ADD CUSTOMER </a>
+          </li>
+       
+        
+      
+        
+        </ul>
+        <form action="{% url 'search' %}" class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Customer name" aria-label="Search" name="search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 py-2">
+          <div class="bg-dark text-center p-4">
+            <h3 class="text-white">TOTAL EARNING</h3>
+             
+         
+            <h2 class="text-white"><b> &#8377; {{credit}}</b></h2>
+             
+             
+          </div>
+           
+        </div>
+        <div class="col-lg-4 py-2">
+          <div class="bg-dark text-center p-4">
+            <h3 class="text-white">TOTAL DUE</h3>
+            <h2 class="text-white"><b> &#8377; {{due}}</b></h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container py-5">
+       
+       
+         
+        <div class="row">
+           
+          
+          <div class="col-lg-12">
+            <h4 class="text-center alert alert-info mb-5"><b>CUSTOMER LIST</b> </h4>
+            {% if data %}
+            <table class="table table-hover table-responsive-sm my-2">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">NAME</th>
+                  <th scope="col">PHONE</th>
+                  <th scope="col">PRODUCT</th>
+                  <th scope="col">CREDIT</th>
+                  <th scope="col">DUE</th>
+                  <th scope="col">DATE</th>
+                  <th scope="col">ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for info in data %}
+                  <!--modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="alert alert-danger" role="alert">
+                          Are you sure ?
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <form action="{% url 'delete' info.id %}" method="POST" class="d-inline">
+                          {% csrf_token %}
+                          <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">NO</button>
+                          <input type="submit" value="YES" class="btn btn-danger btn-sm">
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <tr>
+                  <th scope="row">{{info.id}}</th>
+                  <td>{{info.name}}</td>
+                  <td>{{info.phone}}</td>
+                  <td>{{info.product}}</td>
+                  <td>{{info.credit}}</td>
+                  <td>{{info.due}}</td>
+                  <td>{{info.date}}</td>
+                 
+                  <td>
+                
+                    <form action="{% url 'update' info.id %}" method="POST" class="d-inline">
+                      {% csrf_token %}
+                      <input type="submit" value="UPDATE" class="btn btn-warning btn-sm">
+                    </form>
+                  
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal">
+                      DELETE
+                    </button>
+                  </td>
+                 
+                </tr>
+                
+                {% endfor%}
+              </tbody>
+            </table>
+        
+            {% else %}
+            <h4 class="text-center alert alert-warning"> NO RECORD</h4>
+            {% endif %}
+         
+          </div>
+        </div>
+         
+  
+
+    </div>
+    
+     
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      {% endblock %}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+     
+    {% block js %}
+  
+
+    <script>
+      $('.toast').toast('show')
+        </script>
+    {% endblock %}
+
+    
+  </body>
+</html>
